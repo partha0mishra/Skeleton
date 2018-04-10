@@ -1,17 +1,19 @@
 package com.acmecorp;
 
-import com.acmecorp.BatchJob.Splitter;
 import com.acmecorp.provided.ClickEventGenerator;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.connectors.fs.SequenceFileWriter;
+import org.apache.flink.streaming.connectors.fs.bucketing.BucketingSink;
+import org.apache.flink.streaming.connectors.fs.bucketing.DateTimeBucketer;
 import org.apache.flink.util.Collector;
+import org.apache.hadoop.io.Text;
 
 
 public class StreamingJob {
@@ -20,20 +22,24 @@ public class StreamingJob {
 		final ParameterTool pt = ParameterTool.fromArgs(args);
 
 		DataStream<String> input = env.addSource(new ClickEventGenerator(pt));
-		DataStream<Tuple2<String,Integer>> second = input
+		DataStream<Tuple2<String,Integer>> tenMinUserAction = input
 				.flatMap(new Splitter())
 				.keyBy(0)
 				.window(SlidingProcessingTimeWindows.of(Time.minutes(10),Time.minutes(1)))
 				.sum(1);	
 
-		second.print();
+		//tenMinUserAction.print();
 		
-		//BucketingSink<String> sink = new BucketingSink<String>("D:\\tmp\\sinks\\01");
-				
+		BucketingSink<Tuple2<String,Integer>> sink = new BucketingSink<Tuple2<String,Integer>>("/acme/tmp00")
+				//.setWriter(new SequenceFileWriter<Text,IntWritable>())
+				.setBucketer(new DateTimeBucketer<Tuple2<String,Integer>>("yyyy-MM-dd--HHmm"));
+		
+		tenMinUserAction.addSink(sink);
 		// execute program
 		env.execute("Streaming Analytics");
 	}
 	public static class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>>{
+		private static final long serialVersionUID = 1L;
 		final String USER_ACCOUNTID = "user.accountId";
 		final String USER_IP = "user.ip";
 		final String PROPERTY_DELIMITER = ",";
