@@ -32,6 +32,7 @@ public class StreamingJob {
 		final String less_dir = pt.getRequired("less");
 		
 		env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+		env.enableCheckpointing(500);
 		
 		DataStream<String> input = env.addSource(new ClickEventGenerator(pt));
 		DataStream<Tuple2<String,Integer>> tenMinUserAction = input
