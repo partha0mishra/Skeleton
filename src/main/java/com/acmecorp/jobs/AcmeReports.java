@@ -54,6 +54,7 @@ public class AcmeReports {
 				.flatMap(new Splitter())
 				.keyBy(0)
 				.window(SlidingEventTimeWindows.of(Time.minutes(10),Time.minutes(1)))
+				.allowedLateness(Time.seconds(30))
 				.reduce(new ReduceFunction<Tuple2<String,Integer>>(){
 					private static final long serialVersionUID = 1L;
 					public Tuple2<String,Integer> reduce(Tuple2<String,Integer> val1, Tuple2<String,Integer> val2){
