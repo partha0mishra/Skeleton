@@ -1,9 +1,9 @@
-package com.acmecorp;
+package com.acmecorp.processing.functions;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 
-public class FilterTrue implements FilterFunction<Tuple2<String, Boolean>> {
+public class FilterFalse implements FilterFunction<Tuple2<String, Boolean>> {
 
 	/**
 	 * 
@@ -12,7 +12,8 @@ public class FilterTrue implements FilterFunction<Tuple2<String, Boolean>> {
 
 	@Override
 	public boolean filter(Tuple2<String, Boolean> arg0) throws Exception {
-		return arg0.f1;
+		// TODO Auto-generated method stub
+		return !arg0.f1;
 	}
 
 }

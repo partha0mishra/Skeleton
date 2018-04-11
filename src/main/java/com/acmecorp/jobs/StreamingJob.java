@@ -1,4 +1,4 @@
-package com.acmecorp;
+package com.acmecorp.jobs;
 
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -10,6 +10,11 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.fs.bucketing.BucketingSink;
 import org.apache.flink.streaming.connectors.fs.bucketing.DateTimeBucketer;
 
+import com.acmecorp.processing.functions.FilterFalse;
+import com.acmecorp.processing.functions.FilterTrue;
+import com.acmecorp.processing.functions.FirstFieldOutputMapper;
+import com.acmecorp.processing.functions.Splitter;
+import com.acmecorp.processing.functions.TenOrLessFlatMapper;
 import com.acmecorp.provided.ClickEventGenerator;
 /**
  * Java implementation for the real-time processing of user data for Acme corporation.

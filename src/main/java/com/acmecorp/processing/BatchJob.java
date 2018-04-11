@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.acmecorp;
+package com.acmecorp.processing;
 
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.common.functions.FlatMapFunction;

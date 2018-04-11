@@ -1,4 +1,4 @@
-package com.acmecorp;
+package com.acmecorp.processing.functions;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
