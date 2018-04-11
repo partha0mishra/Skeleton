@@ -28,8 +28,8 @@ public class StreamingJob {
 	public static void main(String[] args) throws Exception {
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		final ParameterTool pt = ParameterTool.fromArgs(args);
-		final String more_dir = pt.getRequired("more");
-		final String less_dir = pt.getRequired("less");
+		//final String more_dir = pt.getRequired("more");
+		//final String less_dir = pt.getRequired("less");
 		
 		env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 		env.enableCheckpointing(500);
@@ -48,14 +48,14 @@ public class StreamingJob {
 		DataStream<String> lessAction = tenOrLessUserActions
 				.filter(new FilterFalse())
 				.map(new FirstFieldOutputMapper());
-		//tenMinUserAction.print();
+		tenMinUserAction.print();
 /*
 		BucketingSink<Tuple2<String,Integer>> sink = new BucketingSink<Tuple2<String,Integer>>("/acme/tmp00")
 				//.setWriter(new SequenceFileWriter<Text,IntWritable>())
 				.setBucketer(new DateTimeBucketer<Tuple2<String,Integer>>("yyyy-MM-dd--HHmm"));
 		
 		tenMinUserAction.addSink(sink);
-*/
+*//*
 		BucketingSink<String> moreSink = new BucketingSink<String>(more_dir)
 				.setBucketer(new DateTimeBucketer<String>("yyyy-MM-dd--HHmm"));
 		
@@ -64,6 +64,7 @@ public class StreamingJob {
 		
 		moreActions.addSink(moreSink);
 		lessAction.addSink(lessSink);
+		*/
 		// execute program
 		env.execute("ACME Streaming Analytics");
 	}
