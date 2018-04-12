@@ -52,7 +52,7 @@ public class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>
 			// if account ID = -1, let's use userIp instead
 			//out.collect(new Tuple2<String, Integer>(userIp,1));
 		}else {
-			out.collect(new Tuple2<String, Integer>(userAccountId,1));
+			out.collect(new Tuple2<String, Integer>(userAccountId.trim(),1));
 		}
 	}
 

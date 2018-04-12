@@ -12,7 +12,6 @@ public class FilterFalse implements FilterFunction<Tuple2<String, Boolean>> {
 
 	@Override
 	public boolean filter(Tuple2<String, Boolean> arg0) throws Exception {
-		// TODO Auto-generated method stub
 		return !arg0.f1;
 	}
 

@@ -30,31 +30,38 @@ import com.acmecorp.provided.ClickEventGenerator;
  * 3. Output a directory with user IDs who performed less than 10 events in past 10 mins
  * 
  * Parameters:
- *   -more path-to-directory-for-users-with-10-or-more-events
- *   -less path-to-directory-for-users-with-less-events
- *   -checkpoint path-to-directory-to-save-state
+ *   -more path-to-directory-for-users-with-10-or-more-events [e.g. hdfs://localhost:9000/acme/activities/report/more]
+ *   -less path-to-directory-for-users-with-less-events [e.g. hdfs://localhost:9000/acme/activities/report/less]
+ *   -checkpoint path-to-directory-to-save-state [e.g. hdfs://localhost:9000/acme/activities/checkpoint]
  */
 
 public class AcmeReports {
 	public static void main(String[] args) throws Exception {
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		final ParameterTool pt = ParameterTool.fromArgs(args);
+		// Two directories to keep the user Ids with less than 10 events in a window and the one with others
 		final String more_dir = pt.getRequired("more");
 		final String less_dir = pt.getRequired("less");
+		// Checkpoint directory
 		final String checkpoint_dir = pt.getRequired("checkpoint");
-		
+		// Computation is preferred to be on Event Time
 		env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-		
+		// Enabling checkpointing
 		env.setStateBackend(new FsStateBackend(checkpoint_dir));
 		env.enableCheckpointing(1000);
+		// Restart strategy, to try 60 times after a 10 second time-out
 		env.setRestartStrategy(RestartStrategies.fixedDelayRestart(60, org.apache.flink.api.common.time.Time.of(10, TimeUnit.SECONDS)));
 		
+		// Getting Data Stream from the generator class
 		DataStream<String> input = env.addSource(new ClickEventGenerator(pt));
+		// Split the json record, take user id, keyBy user id, sliding window of 10 mins with 1 min slide
+		// Allowing 1 min late arrival
+		// reduce(_+_)
 		DataStream<Tuple2<String,Integer>> tenMinUserAction = input
 				.flatMap(new Splitter())
 				.keyBy(0)
 				.window(SlidingEventTimeWindows.of(Time.minutes(10),Time.minutes(1)))
-				.allowedLateness(Time.seconds(30))
+				.allowedLateness(Time.minutes(1))
 				.reduce(new ReduceFunction<Tuple2<String,Integer>>(){
 					private static final long serialVersionUID = 1L;
 					public Tuple2<String,Integer> reduce(Tuple2<String,Integer> val1, Tuple2<String,Integer> val2){
@@ -69,14 +76,14 @@ public class AcmeReports {
 		DataStream<String> lessAction = tenOrLessUserActions
 				.filter(new FilterFalse())
 				.map(new FirstFieldOutputMapper());
-		tenMinUserAction.print();
+		//tenMinUserAction.print();
 /*
 		BucketingSink<Tuple2<String,Integer>> sink = new BucketingSink<Tuple2<String,Integer>>("/acme/tmp00")
 				//.setWriter(new SequenceFileWriter<Text,IntWritable>())
 				.setBucketer(new DateTimeBucketer<Tuple2<String,Integer>>("yyyy-MM-dd--HHmm"));
 		
 		tenMinUserAction.addSink(sink);
-*//*
+*/
 		BucketingSink<String> moreSink = new BucketingSink<String>(more_dir)
 				.setBucketer(new DateTimeBucketer<String>("yyyy-MM-dd--HHmm"));
 		
@@ -85,7 +92,7 @@ public class AcmeReports {
 		
 		moreActions.addSink(moreSink);
 		lessAction.addSink(lessSink);
-		*/
+		//
 		// execute program
 		env.execute("ACME Streaming Analytics");
 	}
