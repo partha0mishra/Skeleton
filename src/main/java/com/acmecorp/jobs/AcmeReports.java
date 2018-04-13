@@ -30,6 +30,7 @@ import com.acmecorp.provided.ClickEventGenerator;
  * 3. Output a directory with user IDs who performed less than 10 events in past 10 mins
  * 
  * Parameters:
+ *   -all path-to-directory-for-unfiltered-records-of-users-and-events [e.g. hdfs://localhost:9000/acme/activities/report/all]
  *   -more path-to-directory-for-users-with-10-or-more-events [e.g. hdfs://localhost:9000/acme/activities/report/more]
  *   -less path-to-directory-for-users-with-less-events [e.g. hdfs://localhost:9000/acme/activities/report/less]
  *   -checkpoint path-to-directory-to-save-state [e.g. hdfs://localhost:9000/acme/activities/checkpoint]
@@ -39,6 +40,8 @@ public class AcmeReports {
 	public static void main(String[] args) throws Exception {
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		final ParameterTool pt = ParameterTool.fromArgs(args);
+		// Directory to show all user activities
+		final String all_dir = pt.getRequired("all");
 		// Two directories to keep the user Ids with less than 10 events in a window and the one with others
 		final String more_dir = pt.getRequired("more");
 		final String less_dir = pt.getRequired("less");
@@ -62,6 +65,7 @@ public class AcmeReports {
 				.keyBy(0)
 				.window(SlidingEventTimeWindows.of(Time.minutes(10),Time.minutes(1)))
 				.allowedLateness(Time.minutes(1))
+				//.sum(1)
 				.reduce(new ReduceFunction<Tuple2<String,Integer>>(){
 					private static final long serialVersionUID = 1L;
 					public Tuple2<String,Integer> reduce(Tuple2<String,Integer> val1, Tuple2<String,Integer> val2){
@@ -84,15 +88,19 @@ public class AcmeReports {
 		
 		tenMinUserAction.addSink(sink);
 */
+		BucketingSink<Tuple2<String,Integer>> allSink = new BucketingSink<Tuple2<String,Integer>>(all_dir)
+				.setBucketer(new DateTimeBucketer<Tuple2<String,Integer>>("yyyy-MM-dd--HHmm"));
+
 		BucketingSink<String> moreSink = new BucketingSink<String>(more_dir)
 				.setBucketer(new DateTimeBucketer<String>("yyyy-MM-dd--HHmm"));
 		
 		BucketingSink<String> lessSink = new BucketingSink<String>(less_dir)
 				.setBucketer(new DateTimeBucketer<String>("yyyy-MM-dd--HHmm"));
-		
+		// Attach Sinks to the DataStreams
+		tenMinUserAction.addSink(allSink);
 		moreActions.addSink(moreSink);
 		lessAction.addSink(lessSink);
-		//
+		
 		// execute program
 		env.execute("ACME Streaming Analytics");
 	}
