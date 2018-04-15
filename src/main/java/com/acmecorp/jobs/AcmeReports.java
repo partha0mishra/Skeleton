@@ -76,10 +76,10 @@ public class AcmeReports {
 		DataStream<Tuple2<String, Boolean>> tenOrLessUserActions=tenMinUserAction.flatMap(new TenOrLessFlatMapper());
 		DataStream<String> moreActions = tenOrLessUserActions
 				.filter(new FilterTrue())
-				.map(new FirstFieldOutputMapper());
+				.map(new FirstFieldOutputMapper<String>());
 		DataStream<String> lessAction = tenOrLessUserActions
 				.filter(new FilterFalse())
-				.map(new FirstFieldOutputMapper());
+				.map(new FirstFieldOutputMapper<String>());
 		//tenMinUserAction.print();
 /*
 		BucketingSink<Tuple2<String,Integer>> sink = new BucketingSink<Tuple2<String,Integer>>("/acme/tmp00")
