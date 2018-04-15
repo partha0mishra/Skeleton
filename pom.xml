@@ -108,6 +108,29 @@ under the License.
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.12.1</version>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<configuration>
+							<configLocation>/tools/maven/checkstyle.xml</configLocation>
+							<logViolationsToConsole>true</logViolationsToConsole>
+							<excludes>**/**/**/ClickEventGenerator.*</excludes>
+							<failsOnError>false</failsOnError>
+							<failOnViolation>false</failOnViolation>
+			                <violationSeverity>warning</violationSeverity>
+			                <linkXRef>false</linkXRef>
+						</configuration>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>2.4.1</version>
 				<executions>

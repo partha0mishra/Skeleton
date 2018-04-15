@@ -41,16 +41,16 @@ public class AcmeReports {
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		final ParameterTool pt = ParameterTool.fromArgs(args);
 		// Directory to show all user activities
-		final String all_dir = pt.getRequired("all");
+		final String allDir = pt.getRequired("all");
 		// Two directories to keep the user Ids with less than 10 events in a window and the one with others
-		final String more_dir = pt.getRequired("more");
-		final String less_dir = pt.getRequired("less");
+		final String moreDir = pt.getRequired("more");
+		final String lessDir = pt.getRequired("less");
 		// Checkpoint directory
-		final String checkpoint_dir = pt.getRequired("checkpoint");
+		final String checkpointDir = pt.getRequired("checkpoint");
 		// Computation is preferred to be on Event Time
 		env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 		// Enabling checkpointing
-		env.setStateBackend(new FsStateBackend(checkpoint_dir));
+		env.setStateBackend(new FsStateBackend(checkpointDir));
 		env.enableCheckpointing(1000);
 		// Restart strategy, to try 60 times after a 10 second time-out
 		env.setRestartStrategy(RestartStrategies.fixedDelayRestart(60, org.apache.flink.api.common.time.Time.of(10, TimeUnit.SECONDS)));
@@ -88,13 +88,13 @@ public class AcmeReports {
 		
 		tenMinUserAction.addSink(sink);
 */
-		BucketingSink<Tuple2<String,Integer>> allSink = new BucketingSink<Tuple2<String,Integer>>(all_dir)
+		BucketingSink<Tuple2<String,Integer>> allSink = new BucketingSink<Tuple2<String,Integer>>(allDir)
 				.setBucketer(new DateTimeBucketer<Tuple2<String,Integer>>("yyyy-MM-dd--HHmm"));
 
-		BucketingSink<String> moreSink = new BucketingSink<String>(more_dir)
+		BucketingSink<String> moreSink = new BucketingSink<String>(moreDir)
 				.setBucketer(new DateTimeBucketer<String>("yyyy-MM-dd--HHmm"));
 		
-		BucketingSink<String> lessSink = new BucketingSink<String>(less_dir)
+		BucketingSink<String> lessSink = new BucketingSink<String>(lessDir)
 				.setBucketer(new DateTimeBucketer<String>("yyyy-MM-dd--HHmm"));
 		// Attach Sinks to the DataStreams
 		tenMinUserAction.addSink(allSink);
