@@ -23,15 +23,15 @@ public class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>
 		}
 	 */
 	private static final long serialVersionUID = 1L;
-	final String USER_ACCOUNTID = "user.accountId";
-	final String USER_IP = "user.ip";
-	final String PROPERTY_DELIMITER = ",";
-	final String FIELD_DELIMITER = ":";
-	final String INVALID_USER_ACCOUNT_ID = "-1";
-	final String DOUBLE_QUOTE = "\"";
-	final String NOTHING = "";
-	final String OPENING_BRACES = "{";
-	final String CLOSING_BRACES = "}";
+	private static final String USER_ACCOUNTID = "user.accountId";
+	private static final String USER_IP = "user.ip";
+	private static final String PROPERTY_DELIMITER = ",";
+	private static final String FIELD_DELIMITER = ":";
+	private static final String INVALID_USER_ACCOUNT_ID = "-1";
+	private static final String DOUBLE_QUOTE = "\"";
+	private static final String NOTHING = "";
+	private static final String OPENING_BRACES = "{";
+	private static final String CLOSING_BRACES = "}";
 
 	/* (non-Javadoc)
 	 * @see org.apache.flink.api.common.functions.FlatMapFunction#flatMap(java.lang.Object, org.apache.flink.util.Collector)
