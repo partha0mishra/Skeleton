@@ -11,15 +11,15 @@ import org.apache.flink.util.Collector;
  * @author partha_m
  *
  */
-public class TenOrLessFlatMapper implements FlatMapFunction<Tuple2<String,Integer>,Tuple2<String, Boolean>> {
+public class TenOrLessFlatMapper<T> implements FlatMapFunction<Tuple2<T,Integer>,Tuple2<T, Boolean>> {
 	private static final long serialVersionUID = 1L;
 
 	/* (non-Javadoc)
 	 * @see org.apache.flink.api.common.functions.FlatMapFunction#flatMap(java.lang.Object, org.apache.flink.util.Collector)
 	 */
 	@Override
-	public void flatMap(Tuple2<String,Integer> input, Collector<Tuple2<String, Boolean>> out) throws Exception {
-		String outVal = input.f0;
+	public void flatMap(Tuple2<T,Integer> input, Collector<Tuple2<T, Boolean>> out) throws Exception {
+		T outVal = input.f0;
 		// for debug
 		//outVal = outVal+"_"+input.f1;
 		

@@ -17,7 +17,7 @@ public class FilterTrueTest{
      */
     @Test
     public void testFilterTrueWithTrue() throws Exception{
-        FilterTrue filterTrue = new FilterTrue();
+        FilterTrue<String> filterTrue = new FilterTrue<String>();
         String userId = "123456";
         boolean result = true;
         assertEquals(result, filterTrue.filter(new Tuple2<>(userId,true)));
@@ -27,25 +27,9 @@ public class FilterTrueTest{
      */
     @Test
     public void testFilterTrueWithFalse() throws Exception{
-        FilterTrue filterTrue = new FilterTrue();
+        FilterTrue<String> filterTrue = new FilterTrue<String>();
         String userId = "123456";
         boolean result = false;
         assertEquals(result, filterTrue.filter(new Tuple2<>(userId,false)));
     }
-    /**
-     * Test02: passing null should throw exception
-     * @throws Exception
-     */
-  /*  @Test (expected=Exception.class)
-    public void testFilterForException(){
-    	FilterTrue filterTrue = new FilterTrue();
-    	
-    	try {
-    		filterTrue.filter(null);
-    		fail("Filter fails when null is passed");
-    	}catch (Exception e) {
-			// expected
-		}
-    }*/
-    
-}
+ }

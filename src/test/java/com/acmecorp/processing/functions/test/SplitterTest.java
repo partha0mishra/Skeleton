@@ -63,6 +63,10 @@ public class SplitterTest{
         assertEquals(Lists.newArrayList(result), CollectSink.values);
     }
 	
+	/**
+	 * @author partha_m
+	 *
+	 */
 	private static class CollectSink implements SinkFunction<Tuple2<String, Integer>> {
 		private static final long serialVersionUID = 1L;
 		public static final List<Tuple2<String, Integer>> values = new ArrayList<>();

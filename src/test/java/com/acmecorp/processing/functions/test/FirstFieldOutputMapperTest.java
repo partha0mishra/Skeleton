@@ -16,16 +16,16 @@ public class FirstFieldOutputMapperTest{
      */
     @Test
     public void testFirstFieldOutputMapperWithStringTrue() throws Exception{
-    	FirstFieldOutputMapper<String> firstFieldOutputMapper = new FirstFieldOutputMapper<String>();
+    	FirstFieldOutputMapper<String,Boolean> firstFieldOutputMapper = new FirstFieldOutputMapper<String,Boolean>();
         String userId = "123456";
         assertEquals(userId, firstFieldOutputMapper.map(new Tuple2<>(userId,true)));
     }
     /**
-     * Test01: Tuple2<String, false> should give back the String value  
+     * Test02: Tuple2<String, false> should give back the String value  
      */
     @Test
     public void testFirstFieldOutputMapperWithStringFalse() throws Exception{
-    	FirstFieldOutputMapper<String> firstFieldOutputMapper = new FirstFieldOutputMapper<String>();
+    	FirstFieldOutputMapper<String,Boolean> firstFieldOutputMapper = new FirstFieldOutputMapper<String,Boolean>();
         String userId = "123456";
         assertEquals(userId, firstFieldOutputMapper.map(new Tuple2<>(userId,true)));
     }
@@ -34,7 +34,7 @@ public class FirstFieldOutputMapperTest{
      */
     @Test
     public void testFirstFieldOutputMapperWithIntegerTrue() throws Exception{
-    	FirstFieldOutputMapper<Integer> firstFieldOutputMapper = new FirstFieldOutputMapper<Integer>();
+    	FirstFieldOutputMapper<Integer,Boolean> firstFieldOutputMapper = new FirstFieldOutputMapper<Integer,Boolean>();
         Integer userId = 123456;
         assertEquals(userId, firstFieldOutputMapper.map(new Tuple2<>(userId,true)));
     }
@@ -43,7 +43,7 @@ public class FirstFieldOutputMapperTest{
      */
     @Test
     public void testFirstFieldOutputMapperWithIntegerFalse() throws Exception{
-    	FirstFieldOutputMapper<Integer> firstFieldOutputMapper = new FirstFieldOutputMapper<Integer>();
+    	FirstFieldOutputMapper<Integer,Boolean> firstFieldOutputMapper = new FirstFieldOutputMapper<Integer,Boolean>();
         Integer userId = 123456;
         assertEquals(userId, firstFieldOutputMapper.map(new Tuple2<>(userId,false)));
     }

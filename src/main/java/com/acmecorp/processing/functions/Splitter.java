@@ -4,6 +4,10 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
 
+/**
+ * @author partha_m
+ *
+ */
 public class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
 
 	/**
@@ -29,6 +33,9 @@ public class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>
 	final String OPENING_BRACES = "{";
 	final String CLOSING_BRACES = "}";
 
+	/* (non-Javadoc)
+	 * @see org.apache.flink.api.common.functions.FlatMapFunction#flatMap(java.lang.Object, org.apache.flink.util.Collector)
+	 */
 	@Override
 	public void flatMap(String line, Collector<Tuple2<String,Integer>> out) {
 		String userIp = null;

@@ -16,7 +16,7 @@ public class FilterFalseTest{
      */
     @Test
     public void testFilterFalseWithTrue() throws Exception{
-        FilterFalse filterTrue = new FilterFalse();
+        FilterFalse<String> filterTrue = new FilterFalse<String>();
         String userId = "123456";
         boolean result = false;
         assertEquals(result, filterTrue.filter(new Tuple2<>(userId,true)));
@@ -26,7 +26,7 @@ public class FilterFalseTest{
      */
     @Test
     public void testFilterFalseWithFalse() throws Exception{
-        FilterFalse filterTrue = new FilterFalse();
+        FilterFalse<String> filterTrue = new FilterFalse<String>();
         String userId = "123456";
         boolean result = true;
         assertEquals(result, filterTrue.filter(new Tuple2<>(userId,false)));

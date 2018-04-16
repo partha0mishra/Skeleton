@@ -32,7 +32,7 @@ public class TenOrLessFlatMapperTest{
 	
 	    // create a stream of custom elements and apply transformations
 	    env.fromElements(input)
-	            .flatMap(new TenOrLessFlatMapper())
+	            .flatMap(new TenOrLessFlatMapper<String>())
 	            .addSink(new CollectSink());
 	
 	    // execute
@@ -58,7 +58,7 @@ public class TenOrLessFlatMapperTest{
 	
 	    // create a stream of custom elements and apply transformations
 	    env.fromElements(input)
-	            .flatMap(new TenOrLessFlatMapper())
+	            .flatMap(new TenOrLessFlatMapper<String>())
 	            .addSink(new CollectSink());
 	
 	    // execute
@@ -84,7 +84,7 @@ public class TenOrLessFlatMapperTest{
 	
 	    // create a stream of custom elements and apply transformations
 	    env.fromElements(input)
-	            .flatMap(new TenOrLessFlatMapper())
+	            .flatMap(new TenOrLessFlatMapper<String>())
 	            .addSink(new CollectSink());
 	
 	    // execute
@@ -110,7 +110,7 @@ public class TenOrLessFlatMapperTest{
 	
 	    // create a stream of custom elements and apply transformations
 	    env.fromElements(input)
-	            .flatMap(new TenOrLessFlatMapper())
+	            .flatMap(new TenOrLessFlatMapper<String>())
 	            .addSink(new CollectSink());
 	
 	    // execute
@@ -120,6 +120,11 @@ public class TenOrLessFlatMapperTest{
 	    // Should get a blank []
         assertEquals(Lists.newArrayList(result), CollectSink.values);
 	}
+	
+	/**
+	 * @author partha_m
+	 *
+	 */
 	private static class CollectSink implements SinkFunction<Tuple2<String, Boolean>> {
 		private static final long serialVersionUID = 1L;
 		public static final List<Tuple2<String, Boolean>> values = new ArrayList<>();
